@@ -27,7 +27,9 @@ export class ProdutoService {
     }
 
     async cadastrar(props: ProdutoProps) {
-        if (!props.nome || !props.marca) throw new Error("Nome e marca são obrigatórios.");
+        if (!props.codigo || !props.descricao) {
+            throw new Error("Código e descrição são obrigatórios.");
+        }
         const p = await this.repo.criar(props);
         return this.mapper(p);
     }

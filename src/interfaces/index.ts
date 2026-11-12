@@ -7,10 +7,10 @@ export interface UsuarioProps {
 
 export interface ProdutoProps {
     id?: number;
-    nome: string;
-    marca: string;
-    modelo: string;
+    codigo: string;
+    descricao: string;
     quantidade: number;
+    valorUnitario: number;
     estoqueMinimo: number;
 }
 

@@ -19,7 +19,7 @@ export default function ListaProdutos() {
             carregar();
         }
     };
-
+    
     const filtrados = produtos.filter(p => p.descricao.toLowerCase().includes(busca.toLowerCase()));
 
     return (

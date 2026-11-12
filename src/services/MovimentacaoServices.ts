@@ -9,27 +9,35 @@ export class MovimentacaoService {
     ) {}
 
     async registrar(props: MovimentacaoProps) {
-        if (props.quantidade <= 0) throw new Error("Quantidade deve ser maior que zero.");
+        if (props.quantidade <= 0) {
+            throw new Error("Quantidade deve ser maior que zero.");
+        }
 
         const produto = await this.prodRepo.buscarPorId(props.produtoId);
-        if (!produto) throw new Error("Produto não encontrado.");
+        if (!produto) {
+            throw new Error("Produto não encontrado.");
+        }
 
         if (props.tipo === 'SAIDA' && produto.getQuantidade < props.quantidade) {
             throw new Error("Estoque insuficiente.");
         }
 
-        const novoEstoque = props.tipo === 'ENTRADA' 
-            ? produto.getQuantidade + props.quantidade 
+        const novoEstoque = props.tipo === 'ENTRADA'
+            ? produto.getQuantidade + props.quantidade
             : produto.getQuantidade - props.quantidade;
 
-        // Atualização utilizando o setter encapsulado na entidade
-        produto.setQuantidade = novoEstoque;
-
+        // Update stock
         await this.prodRepo.atualizar(props.produtoId, { quantidade: novoEstoque });
+
+        // Register the movement
         await this.movRepo.criar(props);
 
-        if (props.tipo === 'SAIDA' && produto.isEstoqueBaixo()) {
-            return { sucesso: true, alerta: `Atenção: O estoque do produto ${produto.getNome} atingiu o limite mínimo!` };
+        // Check low stock
+        if (props.tipo === 'SAIDA' && novoEstoque <= produto.getEstoqueMinimo) {
+            return {
+                sucesso: true,
+                alerta: `Atenção: O estoque do produto "${produto.getDescricao}" atingiu o limite mínimo!`
+            };
         }
 
         return { sucesso: true, alerta: null };

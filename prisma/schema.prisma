@@ -8,34 +8,34 @@ datasource db {
 }
 
 model Usuario {
-  id       Int    @id @default(autoincrement())
-  nome     String @db.VarChar(255)
-  email    String @unique @db.VarChar(255)
-  senha    String @db.VarChar(255)
+  id            Int            @id @default(autoincrement())
+  nome          String         @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  senha         String         @db.VarChar(255)
   movimentacoes Movimentacao[]
   @@map("Usuario")
 }
 
 model Produto {
-  id         Int     @id @default(autoincrement())
-  nome       String  @unique @db.VarChar(50)
-  marca      String  @db.VarChar(255)
-  modelo     String  @db.VarChar(255)
-  quantidade Int     @default(0)
-  estoque_minimo Int     @default(10)
-  movimentacoes Movimentacao[]
+  id             Int            @id @default(autoincrement())
+  codigo         String         @unique @db.VarChar(50)
+  descricao      String         @db.VarChar(255)
+  quantidade     Int            @default(0)
+  valorUnitario  Decimal        @db.Decimal(10, 2) @default(0)
+  estoqueMinimo  Int            @default(10) @map("estoque_minimo")
+  movimentacoes  Movimentacao[]
   @@map("Produto")
 }
 
 model Movimentacao {
-  id                Int      @id @default(autoincrement())
+  id                Int               @id @default(autoincrement())
   produto_id        Int
   usuario_id        Int
   tipo              TipoMovimentacao
   quantidade        Int
-  data_movimentacao DateTime @default(now())
-  produto Produto @relation(fields: [produto_id], references: [id])
-  usuario Usuario @relation(fields: [usuario_id], references: [id])
+  data_movimentacao DateTime          @default(now())
+  produto           Produto           @relation(fields: [produto_id], references: [id])
+  usuario           Usuario           @relation(fields: [usuario_id], references: [id])
   @@map("Movimentacao")
 }
 
