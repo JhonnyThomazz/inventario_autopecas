@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { ProdutoService } from '@/src/services/ProdutoServices';
 import { ProdutoRepository } from '@/src/repositories/ProdutoRepository';
 
+//java>node
+
 const service = new ProdutoService(new ProdutoRepository());
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }){
